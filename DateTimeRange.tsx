@@ -104,6 +104,7 @@ const DateTimeRange = (props: IFormProps) => {
                 }}
                 dateFormat="yy-mm-dd"
                 showIcon
+                numberOfMonths={2}
                 placeholder={placeholder || defaultPlaceHolder}
                 minDate={minDateValue}
                 maxDate={maxDateValue}
