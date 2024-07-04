@@ -1,5 +1,5 @@
 import { Calendar } from "primereact/calendar";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { inputValidator } from "../../../../library/utilities/helperFunction";
 import { useEffect, useRef, useState } from "react";
 import { IFormFieldType } from "../../../../library/utilities/constant";
@@ -14,12 +14,10 @@ const DateTimeRange = (props: IFormProps) => {
   const {
     control,
     setValue,
-    getValues,
     formState: { errors },
   } = useFormContext();
 
-  const selectedValues = getValues(attribute) || {};
-  const initialValueRef = useRef(selectedValues);
+  const selectedValues = useWatch({ name: attribute }) || {};
 
   const [dates, setDates] = useState<Date[]>();
   const minDateValue = minDate ? new Date(Number(minDate)) : undefined;
@@ -28,16 +26,16 @@ const DateTimeRange = (props: IFormProps) => {
   const defaultPlaceHolder: string = t("components.dateTime.placeholder");
   useEffect(() => {
     if (
-      initialValueRef.current &&
-      initialValueRef.current.from_date_time &&
-      initialValueRef.current.to_date_time
+      selectedValues.from_date_time != null &&
+      selectedValues.to_date_time != null &&
+      !dates
     ) {
       setDates([
-        new Date(Number(initialValueRef.current.from_date_time)),
-        new Date(Number(initialValueRef.current.to_date_time)),
+        new Date(Number(selectedValues.from_date_time)),
+        new Date(Number(selectedValues.to_date_time)),
       ]);
     }
-  }, [initialValueRef]);
+  }, [selectedValues]);
 
   const getClassNames = () => {
     let labelClassName = "";
