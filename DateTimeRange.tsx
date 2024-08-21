@@ -100,11 +100,10 @@ const DateTimeRange = (props: IFormProps) => {
                     }
                   } else {
                     setValue(attribute, {
-                        from_date_time: null,
-                        to_date_time: null,
+                      from_date_time: null,
+                      to_date_time: null,
                     });
                     setDates([]);
-                }
                   }
                 }}
                 dateFormat="yy-mm-dd"
