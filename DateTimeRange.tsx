@@ -129,8 +129,8 @@ const DateTimeRange = (props: IFormProps) => {
                         : null;
 
                       setValue(attribute, {
-                        from_date_time: fromTime,
-                        to_date_time: toTime,
+                        from_date_time: fromTime?.toString(),
+                        to_date_time: toTime?.toString(),
                       });
 
                       setDates(e.value);
