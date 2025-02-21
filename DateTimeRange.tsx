@@ -8,7 +8,7 @@ import { FormFieldError } from "../formFieldError/FormFieldError";
 import { useTranslation } from "react-i18next";
 
 const DateTimeRange = (props: IFormProps) => {
-  const { attribute, form, appendTo, fieldType, isDefaultTime } = props;
+  const { attribute, form, appendTo, fieldType, defaultTime } = props;
   const { label, minDate, maxDate, placeholder } = form[attribute];
   const { required, showTime = true, disabled } = form[attribute].rules;
   const {
@@ -17,14 +17,14 @@ const DateTimeRange = (props: IFormProps) => {
     formState: { errors },
   } = useFormContext();
 
-  const [defaultTime, setDefaultTime] = useState(false);
-  const defaultFromTime = isDefaultTime?.defaultFromTime;
-  const defaultToTime = isDefaultTime?.defaultToTime;
+  const [isDefaultTime, setIsDefaultTime] = useState(false);
+  const defaultFromTime = defaultTime?.defaultFromTime;
+  const defaultToTime = defaultTime?.defaultToTime;
   useEffect(() => {
     if (defaultFromTime && defaultToTime) {
-      setDefaultTime(true);
+      setIsDefaultTime(true);
     } else {
-      setDefaultTime(false);
+      setIsDefaultTime(false);
     }
   }, [defaultFromTime, defaultToTime]);
 
@@ -105,7 +105,7 @@ const DateTimeRange = (props: IFormProps) => {
                       new Date(date)?.getTime()?.toString()
                     );
 
-                    if (defaultTime && e.originalEvent.type === "click") {
+                    if (isDefaultTime && e.originalEvent.type === "click") {
                       const fromTimeParts = defaultFromTime
                         ? defaultFromTime.split(":").map(Number)
                         : "";
@@ -135,7 +135,7 @@ const DateTimeRange = (props: IFormProps) => {
 
                       setDates(e.value);
                     } else {
-                      setDefaultTime(false);
+                      setIsDefaultTime(false);
                       setValue(attribute, {
                         from_date_time: dates[0],
                         to_date_time: dates[1],
@@ -143,7 +143,8 @@ const DateTimeRange = (props: IFormProps) => {
                       setDates(e.value);
                     }
                   } else {
-                    if (defaultFromTime && defaultToTime) setDefaultTime(true);
+                    if (defaultFromTime && defaultToTime)
+                      setIsDefaultTime(true);
 
                     setValue(attribute, {
                       from_date_time: null,
