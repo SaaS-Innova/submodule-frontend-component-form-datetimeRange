@@ -1,14 +1,14 @@
 import { Calendar } from "primereact/calendar";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { inputValidator } from "../../../../library/utilities/helperFunction";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { IFormFieldType } from "../../../../library/utilities/constant";
 import { IFormProps } from "../formInterface/forms.model";
 import { FormFieldError } from "../formFieldError/FormFieldError";
 import { useTranslation } from "react-i18next";
 
 const DateTimeRange = (props: IFormProps) => {
-  const { attribute, form, appendTo, fieldType } = props;
+  const { attribute, form, appendTo, fieldType, isDefaultTime } = props;
   const { label, minDate, maxDate, placeholder } = form[attribute];
   const { required, showTime = true, disabled } = form[attribute].rules;
   const {
@@ -16,6 +16,17 @@ const DateTimeRange = (props: IFormProps) => {
     setValue,
     formState: { errors },
   } = useFormContext();
+
+  const [defaultTime, setDefaultTime] = useState(false);
+  const defaultFromTime = isDefaultTime?.defaultFromTime;
+  const defaultToTime = isDefaultTime?.defaultToTime;
+  useEffect(() => {
+    if (defaultFromTime && defaultToTime) {
+      setDefaultTime(true);
+    } else {
+      setDefaultTime(false);
+    }
+  }, [defaultFromTime, defaultToTime]);
 
   const selectedValues = useWatch({ name: attribute }) || {};
 
@@ -93,7 +104,38 @@ const DateTimeRange = (props: IFormProps) => {
                     const dates = e?.value?.map((date: Date) =>
                       new Date(date)?.getTime()?.toString()
                     );
-                    if (dates.length > 0) {
+
+                    if (defaultTime && e.originalEvent.type === "click") {
+                      const fromTimeParts = defaultFromTime
+                        ? defaultFromTime.split(":").map(Number)
+                        : "";
+                      const toTimeParts = defaultToTime
+                        ? defaultToTime.split(":").map(Number)
+                        : "";
+
+                      const fromTime = e.value[0].setHours(
+                        fromTimeParts[0],
+                        fromTimeParts[1],
+                        0,
+                        0
+                      );
+                      const toTime = e.value[1]
+                        ? e.value[1].setHours(
+                            toTimeParts[0],
+                            toTimeParts[1],
+                            0,
+                            0
+                          )
+                        : null;
+
+                      setValue(attribute, {
+                        from_date_time: fromTime,
+                        to_date_time: toTime,
+                      });
+
+                      setDates(e.value);
+                    } else {
+                      setDefaultTime(false);
                       setValue(attribute, {
                         from_date_time: dates[0],
                         to_date_time: dates[1],
@@ -101,6 +143,8 @@ const DateTimeRange = (props: IFormProps) => {
                       setDates(e.value);
                     }
                   } else {
+                    if (defaultFromTime && defaultToTime) setDefaultTime(true);
+
                     setValue(attribute, {
                       from_date_time: null,
                       to_date_time: null,
