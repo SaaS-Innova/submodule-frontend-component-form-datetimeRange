@@ -45,6 +45,11 @@ const DateTimeRange = (props: IFormProps) => {
         new Date(Number(selectedValues.from_date_time)),
         new Date(Number(selectedValues.to_date_time)),
       ]);
+    } else if (
+      selectedValues.from_date_time === null &&
+      selectedValues.to_date_time === null
+    ) {
+      setDates([]);
     }
   }, [selectedValues]);
 
