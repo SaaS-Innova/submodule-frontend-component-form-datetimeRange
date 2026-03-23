@@ -10,7 +10,12 @@ import { useTranslation } from "react-i18next";
 const DateTimeRange = (props: IFormProps) => {
   const { attribute, form, appendTo, fieldType, defaultTime } = props;
   const { label, minDate, maxDate, placeholder } = form[attribute];
-  const { required, showTime = true, disabled } = form[attribute].rules;
+  const {
+    required,
+    showTime = true,
+    disabled,
+    showWeek = true,
+  } = form[attribute].rules;
   const {
     control,
     setValue,
@@ -167,6 +172,7 @@ const DateTimeRange = (props: IFormProps) => {
                 appendTo={appendTo}
                 disabled={disabled}
                 selectionMode="range"
+                showWeek={showWeek}
               />
             );
           }}
