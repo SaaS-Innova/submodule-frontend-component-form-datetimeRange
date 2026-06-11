@@ -41,15 +41,10 @@ const DateTimeRange = (props: IFormProps) => {
   const { t } = useTranslation();
   const defaultPlaceHolder: string = t("components.dateTime.placeholder");
   useEffect(() => {
-    if (
-      selectedValues.from_date_time != null &&
-      selectedValues.to_date_time != null &&
-      !dates
-    ) {
-      setDates([
-        new Date(Number(selectedValues.from_date_time)),
-        new Date(Number(selectedValues.to_date_time)),
-      ]);
+    const fromTime = Number(selectedValues.from_date_time);
+    const toTime = Number(selectedValues.to_date_time);
+    if (fromTime > 0 && toTime > 0 && !dates) {
+      setDates([new Date(fromTime), new Date(toTime)]);
     } else if (
       selectedValues.from_date_time === null &&
       selectedValues.to_date_time === null
@@ -112,7 +107,7 @@ const DateTimeRange = (props: IFormProps) => {
                 onChange={(e: any) => {
                   if (e.value) {
                     const dates = e?.value?.map((date: Date) =>
-                      new Date(date)?.getTime()?.toString()
+                      new Date(date)?.getTime()?.toString(),
                     );
 
                     if (isDefaultTime && e.originalEvent.type === "click") {
@@ -127,14 +122,14 @@ const DateTimeRange = (props: IFormProps) => {
                         fromTimeParts[0],
                         fromTimeParts[1],
                         0,
-                        0
+                        0,
                       );
                       const toTime = e.value[1]
                         ? e.value[1].setHours(
                             toTimeParts[0],
                             toTimeParts[1],
                             0,
-                            0
+                            0,
                           )
                         : null;
 
